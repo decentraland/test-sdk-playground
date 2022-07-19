@@ -1,0 +1,14 @@
+{
+  "extends": [
+    "react-app",
+    "@dcl/eslint-config/sdk"
+  ],
+  "parserOptions": {
+    "project": [
+      "tsconfig.json"
+    ]
+  },
+  "rules": {
+    "@typescript-eslint/explicit-module-boundary-types": "off"
+  }
+}
