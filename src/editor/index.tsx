@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import Editor, { OnChange, OnMount, OnValidate } from '@monaco-editor/react'
 
-import { react } from '../react'
 import Preview from '../preview'
 import { ecsTypes, defaultValue, debounce } from './utils'
 
@@ -24,7 +23,7 @@ function EditorComponent() {
       jsxFactory: 'React.createElement'
     })
     editor.setModel(monaco.editor.createModel(defaultValue, 'typescript', monaco.Uri.parse('file:///main.tsx')))
-    monaco.editor.createModel(react + ecsTypes, 'typescript', monaco.Uri.parse('file:///index.d.ts'))
+    monaco.editor.createModel(ecsTypes, 'typescript', monaco.Uri.parse('file:///index.d.ts'))
     setCode(editor.getValue())
   }
 

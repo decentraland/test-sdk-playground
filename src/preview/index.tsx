@@ -1,28 +1,39 @@
-import React, { useEffect, useState } from 'react'
-import { executeCode } from './execute-code'
+import { useEffect } from 'react'
 
 interface PropTypes {
   value: string
 }
 
 function Preview({ value }: PropTypes) {
-  const [Preview, setPreview] = useState<any>()
-  const [error, setError] = useState('')
-
   useEffect(() => {
-    async function getPreview() {
-      if (!value) return
-      const Preview = (await executeCode(value, { react: React })) as React.FC
-      setPreview((<Preview />) as any)
-    }
+    fetch('http://localhost:8000/playground/write_game_ts', {
+      method: 'POST',
+      body: value
+    })
+      .then((_data) => {
+        console.log('update ok!')
+      })
+      .catch((err) => {
+        console.error('update error', err)
+      })
 
-    getPreview().catch((error) => setError(error.message))
+    const previewFrame = document.getElementById('previewFrame')
+    if (previewFrame) {
+      previewFrame
+      // const previewWindow = (previewFrame as any).contentWindow
+      // previewWindow.postMessage('asd')
+    }
   }, [value])
-  console.log(Preview)
+
   return (
-    <div>
-      {error && <div>{error}</div>}
-      <div>{Preview ? Preview : 'loading'}</div>
+    <div style={{ width: '100%' }}>
+      <iframe
+        title={'Decentraland Renderer'}
+        id={'previewFrame'}
+        src="http://localhost:8000/?position=0%2C0&ENABLE_ECS7&renderer-branch=dev&kernel-branch=main&SCENE_DEBUG_PANEL"
+        width="100%"
+        height="100%"
+      ></iframe>
     </div>
   )
 }
