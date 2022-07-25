@@ -18,7 +18,8 @@ export async function transformCode(codeString: string) {
     },
     module: {
       type: 'commonjs'
-    }
+    },
+    sourceMaps: true
   }).code
 }
 
