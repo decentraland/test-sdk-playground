@@ -15,14 +15,17 @@ export const ecsTypes = `
 export const defaultValue = `
 function App() {
   return (
-    <DivUi width={300} height={300} flexDirection={Yoga.FLEX_DIRECTION_ROW} span="root">
-      <DivUi span="1" width={100} height={100}>
-        <DivUi span="1.1" width={100} height={100} />
-        <DivUi span="1.2" width={100} height={100} />
+    <DivUi width={300} height={300} flexDirection={Yoga.FLEX_DIRECTION_ROW}>
+      <DivUi width={100} height={100}>
+        <DivUi width={100} height={100} />
+        <DivUi width={100} height={100} />
       </DivUi>
-      <DivUi span="2" width={100} height={100} position={Yoga.POSITION_TYPE_ABSOLUTE} />
-      <DivUi span="3" width={100} height={100} />
-      <DivUi span="4" width={100} height={100} />
+      <DivUi width={100} height={100} position={Yoga.POSITION_TYPE_ABSOLUTE} />
+      <DivUi width={100} height={100} />
+      <DivUi width={100} height={100}>
+        <DivUi width={100} height={100} />
+        <DivUi width={100} height={100} />
+      </DivUi>
     </DivUi>
   )
 }

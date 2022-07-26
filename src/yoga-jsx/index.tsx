@@ -31,6 +31,7 @@ interface PropTypes {
   isRootNode?: boolean
   direction: Yoga.YogaDirection
   computedLayout?: ComputedLayout
+  parent?: string
 }
 
 export const YogaJsx: React.FC<Partial<PropTypes>> = (props) => {
@@ -128,10 +129,16 @@ export const YogaJsx: React.FC<Partial<PropTypes>> = (props) => {
           right: 0
         }}
       >
-        {props.span}
+        {props.span ? (props.parent ? `${props.parent}.${props.span}` : props.span) : 'root'}
       </div>
       {(children || []).map((children, index) => (
-        <YogaJsx key={index} computedLayout={children} span={index.toString()} {...getChildProps(index)} />
+        <YogaJsx
+          key={index}
+          computedLayout={children}
+          parent={props.span}
+          span={`${index + 1}`}
+          {...getChildProps(index)}
+        />
       ))}
     </div>
   )
