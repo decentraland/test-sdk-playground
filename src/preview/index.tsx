@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { executeCode } from './execute-code'
 
+import './preview.css'
+
 interface PropTypes {
   value: string
 }
@@ -18,9 +20,9 @@ function Preview({ value }: PropTypes) {
 
     getPreview().catch((error) => setError(error.message))
   }, [value])
-  console.log(Preview)
+
   return (
-    <div>
+    <div className="Preview">
       {error && <div>{error}</div>}
       <div>{Preview ? Preview : 'loading'}</div>
     </div>

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react'
 import Editor, { OnChange, OnMount, OnValidate } from '@monaco-editor/react'
 
 import { react } from '../react'
+import { YogaTypings } from '../yoga'
 import Preview from '../preview'
 import { ecsTypes, defaultValue, debounce } from './utils'
 
@@ -20,11 +21,12 @@ function EditorComponent() {
       module: monaco.languages.typescript.ModuleKind.CommonJS,
       noEmit: true,
       typeRoots: ['node_modules/@types'],
-      jsx: monaco.languages.typescript.JsxEmit.React,
-      jsxFactory: 'React.createElement'
+      jsx: monaco.languages.typescript.JsxEmit.Preserve,
+      jsxFactory: 'React.createElement',
+      esModuleInterop: true
     })
     editor.setModel(monaco.editor.createModel(defaultValue, 'typescript', monaco.Uri.parse('file:///main.tsx')))
-    monaco.editor.createModel(react + ecsTypes, 'typescript', monaco.Uri.parse('file:///index.d.ts'))
+    monaco.editor.createModel(react + ecsTypes + YogaTypings, 'typescript', monaco.Uri.parse('file:///index.d.ts'))
     setCode(editor.getValue())
   }
 

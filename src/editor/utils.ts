@@ -7,18 +7,22 @@ export const ecsTypes = `
     type TextProps = {
       children?: string
     }
-    declare function DivUi(props: DivProps): IDiv
-    declare function TextUi(props: TextProps): IDiv
+    declare function DivUi(props: any): IDiv
+    declare function TextUi(props: any): IDiv
   }
 `
 
 export const defaultValue = `
 function App() {
   return (
-    <DivUi>
-      <DivUi>
-        <TextUi>Ecs 7</TextUi>
+    <DivUi width={300} height={300} flexDirection={Yoga.FLEX_DIRECTION_ROW} span="root">
+      <DivUi span="1" width={100} height={100}>
+        <DivUi span="1.1" width={100} height={100} />
+        <DivUi span="1.2" width={100} height={100} />
       </DivUi>
+      <DivUi span="2" width={100} height={100} position={Yoga.POSITION_TYPE_ABSOLUTE} />
+      <DivUi span="3" width={100} height={100} />
+      <DivUi span="4" width={100} height={100} />
     </DivUi>
   )
 }
