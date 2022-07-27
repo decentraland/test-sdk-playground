@@ -2397,7 +2397,58 @@ declare var dcl: DecentralandInterface
 `
 
 export const defaultValue = `
-dcl.log('asd')
+const sdk = engine.baseComponents
+
+function createCube(x: number, y: number, z: number, spawner = true): Entity {
+  const entity = engine.addEntity()
+
+  sdk.Transform.create(entity, {
+    position: { x, y, z },
+    scale: { x: 1, y: 1, z: 1 },
+    rotation: { x: 0, y: 0, z: 0, w: 1 }
+  })
+
+  sdk.BoxShape.create(entity, {
+    withCollisions: true,
+    isPointerBlocker: true,
+    visible: true,
+    uvs: []
+  })
+
+  if (spawner) {
+    sdk.OnPointerDown.create(entity, {
+      button: 1,
+      hoverText: 'Press E to spawn',
+      distance: 100,
+      showFeedback: true
+    })
+  }
+  return entity
+}
+
+function circularSystem(dt: number) {
+  const entitiesWithBoxShapes = engine.groupOf(sdk.BoxShape, sdk.Transform)
+  for (const [entity, _boxShape, _transform] of entitiesWithBoxShapes) {
+    const mutableTransform = sdk.Transform.mutable(entity)
+
+    mutableTransform.rotation = Quaternion.multiply(
+      mutableTransform.rotation,
+      Quaternion.angleAxis(dt * 10, Vector3.Up())
+    )
+  }
+}
+
+function spawnerSystem() {
+  const clickedCubes = engine.groupOf(sdk.OnPointerDownResult)
+  for (const [_entity, _cube] of clickedCubes) {
+    createCube(Math.random() * 8 + 1, Math.random() * 8, Math.random() * 8 + 1, false)
+  }
+}
+
+
+const mainCube = createCube(8, 1, 8)
+engine.addSystem(circularSystem)
+engine.addSystem(spawnerSystem)
 `
 
 export function debounce<F extends (...params: any[]) => void>(fn: F, delay: number) {
