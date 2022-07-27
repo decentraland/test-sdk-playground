@@ -639,9 +639,12 @@
       const kernelBaseUrl = 'https://sdk-team-cdn.decentraland.org/@dcl/kernel/branch/feat/allow-playground-code'
       const kernelScript = (new URL('index.js', `${kernelBaseUrl}/`)).toString()
 
+      // const kernelBaseUrl = 'http://127.0.0.1:8000/@/artifacts'
+      // const kernelScript = 'http://localhost:7666'
+
       const rendererBaseUrl = 'https://renderer-artifacts.decentraland.org/branch/dev'
 
-      const previewServerUrl = 'http://161.35.100.65:8000'
+      const previewServerUrl = 'https://ecs7-template.herokuapp.com'
       const catalystUrl = previewServerUrl
       const realm = `v4~${previewServerUrl}`
       const position = '0,0'

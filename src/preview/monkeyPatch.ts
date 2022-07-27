@@ -1,5 +1,5 @@
 export async function patchPreviewWindow(previewWin: any) {
-  const previewServerUrl = 'http://161.35.100.65:8000'
+  const previewServerUrl = 'https://ecs7-template.herokuapp.com'
 
   const originalFetch = fetch
   async function wrappedFetch(input: RequestInfo | URL, init?: RequestInit): Promise<Response> {
