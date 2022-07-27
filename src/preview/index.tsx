@@ -50,7 +50,7 @@ function Preview({ value }: PropTypes) {
       <iframe
         title={'Decentraland Renderer'}
         id={'previewFrame'}
-        src="http://localhost:3000/preview/index.html"
+        src={`${document.location.origin}/preview/index.html`}
         width="100%"
         height="100%"
       ></iframe>
