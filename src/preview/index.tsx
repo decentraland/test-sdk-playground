@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { transformCode } from './execute-code'
 import { patchPreviewWindow } from './monkeyPatch'
 
@@ -14,15 +14,11 @@ function Preview({ value }: PropTypes) {
           const frameElement = document.getElementById('previewFrame')
           const tmpFrameWindow = (frameElement as any)?.contentWindow
           if (tmpFrameWindow) {
-            // const modifiedData = data.replace(/"/g, '\\"')
-            // const escapedData = data.replace(/"/g, '\\"')
-            // const modifiedData = `\n;eval("${escapedData}")`
             const gameJs = await (await fetch('template.js')).text()
             tmpFrameWindow.PlaygroundCode = gameJs + (';' + data)
             setTimeout(() => {
               tmpFrameWindow.postMessage('{}')
             }, 10)
-            // console.log({ escapedData })
           }
         })
         .catch((err) => {
@@ -54,7 +50,7 @@ function Preview({ value }: PropTypes) {
       <iframe
         title={'Decentraland Renderer'}
         id={'previewFrame'}
-        src="http://localhost:3000/preview/?position=0%2C0&ENABLE_ECS7&SCENE_DEBUG_PANEL&renderer-branch=dev"
+        src="http://localhost:3000/preview/index.html"
         width="100%"
         height="100%"
       ></iframe>

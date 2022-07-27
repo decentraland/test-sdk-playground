@@ -1,47 +1,30 @@
 export async function patchPreviewWindow(previewWin: any) {
-  // const baseUrl = 'http://localhost:8000/'
-
-  // const scene = await (await fetch('http://localhost:8000/content/entities/scene/?pointer=0,0')).json()
-
-  // if (!Array.isArray(scene)) {
-  //   throw new Error("Couldn't get the preview scene A")
-  // } else if (scene.length !== 1) {
-  //   throw new Error("Couldn't get the preview scene B")
-  // }
-
-  // if (scene[0].content[0].file !== 'bin/game.js') {
-  //   throw new Error("Couldn't get the preview scene C")
-  // }
-
-  // const hash = scene[0].content[0].hash
+  const previewServerUrl = 'http://161.35.100.65:8000'
 
   const originalFetch = fetch
   async function wrappedFetch(input: RequestInfo | URL, init?: RequestInit): Promise<Response> {
-    console.log(`Fetch wrapped `, input, init)
-    // if (input === 'http://localhost:3000/preview-wearables') {
-    //   input = `${baseUrl}preview-wearables`
-    // }
-    // if (typeof input === 'string' && input.startsWith('http://localhost:3000/content/')) {
-    //   const restOfUrl = input.substring('http://localhost:3000/content/'.length)
-    //   input = `${baseUrl}${restOfUrl}`
-    // }
-
-    // if (input === `http://localhost:3000/preview/content/contents/${hash}`) {
-    //   console.log('fetch hacked!')
-    // }
-
-    return originalFetch(input, init)
+    let modifiedInput = input
+    if (input instanceof URL || typeof input === 'string') {
+      const urlStr = input.toString()
+      const preview = urlStr.indexOf('preview/index.html/')
+      if (preview > 0) {
+        modifiedInput = previewServerUrl + urlStr.substring(preview + 'preview/index.html/'.length)
+      }
+    }
+    console.log(`Fetch wrapped `, { input, modifiedInput, init })
+    return originalFetch(modifiedInput, init)
   }
   previewWin.fetch = wrappedFetch
   ;(function (xhr) {
     const open = xhr.open
     ;(xhr as any).open = function (...args: any[]) {
-      // if (args[1] === 'http://localhost:3000/comms/status?includeUsersParcels=true') {
-      //   args[1] = `${baseUrl}comms/status?includeUsersParcels=true`
-      // }
-      // if (args[1] === 'http://localhost:3000/lambdas/health') {
-      //   args[1] = `${baseUrl}lambdas/health`
-      // }
+      if (typeof args[1] === 'string') {
+        const urlStr = args[1].toString()
+        const preview = urlStr.indexOf('preview/index.html/')
+        if (preview > 0) {
+          args[1] = previewServerUrl + urlStr.substring(preview + 'preview/index.html/'.length)
+        }
+      }
       console.log(`XHR wrapped `, { args })
       return (open as any).apply(this, args)
     }
@@ -49,11 +32,16 @@ export async function patchPreviewWindow(previewWin: any) {
 
   const originalWs = previewWin.WebSocket
   previewWin.WebSocket = function (url: any, protocols: any) {
+    const urlStr = url.toString()
+    const preview = urlStr.indexOf('preview/index.html')
+
     let newUrl: string = ''
-    if (url.toString().startsWith('ws://localhost:3000')) {
-      newUrl = 'ws://localhost:8000' + url.substring('ws://localhost:3000'.length)
+    if (preview > 0) {
+      newUrl =
+        previewServerUrl.replace('http', 'ws') +
+        url.substring(urlStr.indexOf('preview/index.html') + 'preview/index.html'.length)
     } else {
-      newUrl = url
+      newUrl = urlStr.replaceAll(document.location.origin.replace('http', 'ws'), previewServerUrl.replace('http', 'ws'))
     }
 
     console.log(`ws wrapped `, { url, newUrl })
@@ -61,19 +49,4 @@ export async function patchPreviewWindow(previewWin: any) {
     const that = protocols ? new originalWs(newUrl, protocols) : new originalWs(newUrl)
     return that
   }
-
-  // // Playground stuffs
-  // class RestrictedWebSocket extends WebSocket {
-  //   constructor(url: any, protocols: any) {
-  //     let newUrl = url
-  //     debugger
-
-  //     if (url.toString().startsWith('ws://localhost:3000/preview/')) {
-  //       newUrl = 'ws://localhost:8000/' + url.substring('ws://localhost:3000/preview/'.length)
-  //     }
-  //     super(newUrl, protocols)
-  //   }
-  // }
-
-  // previewWin.WebSocket = RestrictedWebSocket
 }
