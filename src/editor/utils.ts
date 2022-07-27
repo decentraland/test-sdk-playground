@@ -1,13 +1,42 @@
 export const ecsTypes = `
   declare global {
-    type DivProps = {
-      children?: React.Children
-      display?: 'flex'
+    export type Position = {
+      top?: number | string
+      right?: number | string
+      bottom?: number | string
+      left?: number | string
+    }
+
+    export interface YogaProps {
+      display: Yoga.YogaDisplay
+      justifyContent: Yoga.YogaJustifyContent
+      positionType: Yoga.YogaPositionType
+      alignItems: Yoga.YogaAlign
+      alignSelf: Yoga.YogaAlign
+      alignContent: Yoga.YogaAlign
+      flexDirection: Yoga.YogaFlexDirection
+      position: Position
+      padding: Position
+      margin: Position
+      border: Position
+      direction: Yoga.YogaDirection
+      width: number | string
+      height: number | string
+      minWidth: number
+      maxWidth: number
+      minHeight: number
+      maxHeight: number
+      flexWrap: Yoga.YogaFlexWrap
+      flexBasis: string | number
+      flexGrow: number
+      flexShrink: number
+      aspectRatio: number | undefined
+      children: React.ReactNode
     }
     type TextProps = {
       children?: string
     }
-    declare function DivUi(props: any): IDiv
+    declare function DivUi(props: Partial<YogaProps>): IDiv
     declare function TextUi(props: any): IDiv
   }
 `
@@ -20,7 +49,7 @@ function App() {
         <DivUi width={100} height={100} />
         <DivUi width={100} height={100} />
       </DivUi>
-      <DivUi width={100} height={100} position={Yoga.POSITION_TYPE_ABSOLUTE} />
+      <DivUi width={100} height={100} positionType={Yoga.POSITION_TYPE_ABSOLUTE} />
       <DivUi width={100} height={100} />
       <DivUi width={100} height={100}>
         <DivUi width={100} height={100} />

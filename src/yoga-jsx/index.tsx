@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import Yoga from 'yoga-layout-prebuilt'
 
-import { LayoutRecord } from './layout'
+import { LayoutRecord, YogaProps, PositionTypes, positionLayout } from './layout'
 
 type ComputedLayout = {
   left: number
@@ -12,67 +12,51 @@ type ComputedLayout = {
   node: Yoga.YogaNode
 }
 
-interface PropTypes {
-  display: Yoga.YogaDisplay
-  justifyContent: Yoga.YogaJustifyContent
-  position: Yoga.YogaPositionType
-  alignItems: Yoga.YogaAlign
-  alignSelf: Yoga.YogaAlign
-  alignContent: Yoga.YogaAlign
-  flexDirection: Yoga.YogaFlexDirection
-  positionTop: number | string
-  positionLeft: number | string
-  positionRight: number | string
-  positionBottom: number | string
-  width: number
-  height: number
+interface PropTypes extends YogaProps {
   children: React.ReactNode
   span: string
   isRootNode?: boolean
-  direction: Yoga.YogaDirection
   computedLayout?: ComputedLayout
   parent?: string
+}
+
+function toYogaSetProp(value: string): keyof Yoga.YogaNode {
+  return `set${value[0].toUpperCase()}${value.slice(1, value.length)}` as keyof Yoga.YogaNode
 }
 
 export const YogaJsx: React.FC<Partial<PropTypes>> = (props) => {
   const [rootNode, setNode] = useState<Yoga.YogaNode>()
   const [computedLayout, setLayout] = useState<ComputedLayout>()
+
   function createYogaNodes(props: Partial<PropTypes>): Yoga.YogaNode {
     const node = Yoga.Node.create()
     const defaultLayout = LayoutRecord()
-    ;[
-      'width',
-      'height',
-      'minWidth',
-      'maxWidth',
-      'minHeight',
-      'maxHeight',
-      'justifyContent',
-      'alignItems',
-      'alignSelf',
-      'alignContent',
-      'flexGrow',
-      'flexShrink',
-      'positionType',
-      'aspectRatio',
-      'flexWrap',
-      'flexDirection'
-    ].forEach((key) => {
+
+    for (const key in defaultLayout) {
       try {
         const propKey = (props as any)[key]
         const value = propKey ?? (defaultLayout as any)[key]
-        ;(node as any)[`set${key[0].toUpperCase()}${key.slice(1, key.length)}`](value)
+        ;(node as any)[toYogaSetProp(key)](value)
       } catch (e) {
         console.log(e)
       }
-    })
-
-    if (props.position) {
-      node.setPositionType(props.position)
     }
 
-    if (props.positionTop) {
-      node.setPosition(Yoga.EDGE_TOP, props.positionTop)
+    const defaultPosition = positionLayout()
+    for (const key in defaultPosition) {
+      const typedKey: PositionTypes = key as PositionTypes
+      const position = props[typedKey]
+
+      if (!position) continue
+
+      for (const pos in position) {
+        const direction = `EDGE_${pos.toUpperCase()}` as keyof typeof Yoga
+        const yogaDirection = Yoga[direction] as Yoga.YogaEdge
+
+        if (pos === 'left' || pos === 'top' || pos === 'right' || pos === 'bottom') {
+          ;(node[toYogaSetProp(key)] as typeof node.setPosition)(yogaDirection, position[pos])
+        }
+      }
     }
 
     node.setDisplay(Yoga.DISPLAY_FLEX)
@@ -84,7 +68,6 @@ export const YogaJsx: React.FC<Partial<PropTypes>> = (props) => {
   }
 
   function getComputedLayout(node: Yoga.YogaNode): ComputedLayout {
-    console.log({ childCount: node.getChildCount() })
     return {
       ...node.getComputedLayout(),
       node,
@@ -96,7 +79,7 @@ export const YogaJsx: React.FC<Partial<PropTypes>> = (props) => {
     if (props.computedLayout) return undefined
     const root = createYogaNodes(props)
     setNode(root)
-    root.calculateLayout(props.width, props.height, props.direction)
+    root.calculateLayout(props.width as number, props.height as number, props.direction)
     const layout = getComputedLayout(root)
     setLayout(layout)
   }

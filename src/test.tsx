@@ -9,7 +9,7 @@ const Test = () => {
         <YogaJsx width={100} height={100} />
         <YogaJsx width={100} height={100} />
       </YogaJsx>
-      <YogaJsx width={100} height={100} position={Yoga.POSITION_TYPE_ABSOLUTE} />
+      <YogaJsx width={100} height={100} positionType={Yoga.POSITION_TYPE_ABSOLUTE} />
       <YogaJsx width={100} height={100} />
       <YogaJsx width={100} height={100}>
         <YogaJsx width={100} height={100} />
