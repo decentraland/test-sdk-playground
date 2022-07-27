@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import Editor, { OnChange, OnMount, OnValidate } from '@monaco-editor/react'
 
-import { react } from '../react'
-import { YogaTypings } from '../yoga'
+import { react } from '../types/react'
+import { YogaTypings } from '../types/yoga'
 import Preview from '../preview'
 import { ecsTypes, defaultValue, debounce } from './utils'
 
