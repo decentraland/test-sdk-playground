@@ -8,25 +8,25 @@ export const ecsTypes = `
     }
 
     export interface YogaProps {
-      display: Yoga.YogaDisplay
-      justifyContent: Yoga.YogaJustifyContent
-      positionType: Yoga.YogaPositionType
-      alignItems: Yoga.YogaAlign
-      alignSelf: Yoga.YogaAlign
-      alignContent: Yoga.YogaAlign
-      flexDirection: Yoga.YogaFlexDirection
+      display: YogaDisplay
+      justifyContent: YGJustify
+      positionType: YGPositionType
+      alignItems: YGAlign
+      alignSelf: YGAlign
+      alignContent: YGAlign
+      flexDirection: YGFlexDirection
       position: Position
       padding: Position
       margin: Position
       border: Position
-      direction: Yoga.YogaDirection
+      direction: YGDirection
       width: number | string
       height: number | string
       minWidth: number
       maxWidth: number
       minHeight: number
       maxHeight: number
-      flexWrap: Yoga.YogaFlexWrap
+      flexWrap: YGWrap
       flexBasis: string | number
       flexGrow: number
       flexShrink: number
@@ -36,20 +36,20 @@ export const ecsTypes = `
     type TextProps = {
       children?: string
     }
-    declare function DivUi(props: Partial<YogaProps>): IDiv
-    declare function TextUi(props: any): IDiv
+    declare function DivUi(props: Partial<YogaProps>): JSX.Element
+    declare function TextUi(props: any): JSX.Element
   }
 `
 
 export const defaultValue = `
 function App() {
   return (
-    <DivUi width={300} height={300} flexDirection={Yoga.FLEX_DIRECTION_ROW}>
+    <DivUi width={300} height={300} flexDirection={YGFlexDirection.YGFlexDirectionRow}>
       <DivUi width={100} height={100}>
         <DivUi width={100} height={100} />
         <DivUi width={100} height={100} />
       </DivUi>
-      <DivUi width={100} height={100} positionType={Yoga.POSITION_TYPE_ABSOLUTE} />
+      <DivUi width={100} height={100} positionType={YGPositionType.YGPositionTypeAbsolute} />
       <DivUi width={100} height={100} />
       <DivUi width={100} height={100}>
         <DivUi width={100} height={100} />

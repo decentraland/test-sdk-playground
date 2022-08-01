@@ -2,6 +2,7 @@ import { transformSync } from '@swc/wasm-web'
 import Yoga from 'yoga-layout-prebuilt'
 
 import * as YogaJsx from '../yoga-jsx'
+import { YogaTypings } from '../types/yoga'
 
 let swc: { transformSync: typeof transformSync }
 
@@ -32,7 +33,9 @@ export async function executeCode(codeString: string, dependencies: Record<strin
     'yoga-layout-prebuilt': Yoga
   }
   const codeReactString = codeString.replace('function App()', 'export default function App()')
-  const ecsUI = `
+  const ecsUI =
+    YogaTypings +
+    `
   import { YogaJsx as DivUi } from 'yoga-jsx'
   import Yoga from 'yoga-layout-prebuilt'
   import React from 'react'

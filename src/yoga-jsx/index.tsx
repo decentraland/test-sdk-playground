@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import Yoga from 'yoga-layout-prebuilt'
 
-import { LayoutRecord, YogaProps, PositionTypes, positionLayout } from './layout'
+import { defaultLayout, YogaProps, PositionTypes, defaultPositionLayout } from './layout'
 
 type ComputedLayout = {
   left: number
@@ -28,21 +28,23 @@ export const YogaJsx: React.FC<Partial<PropTypes>> = (props) => {
   const [rootNode, setNode] = useState<Yoga.YogaNode>()
   const [computedLayout, setLayout] = useState<ComputedLayout>()
 
+  if (!props) return null
+
   function createYogaNodes(props: Partial<PropTypes>): Yoga.YogaNode {
     const node = Yoga.Node.create()
-    const defaultLayout = LayoutRecord()
-
-    for (const key in defaultLayout) {
+    if (!props) return node
+    const layout = defaultLayout()
+    for (const key in layout) {
       try {
         const propKey = (props as any)[key]
-        const value = propKey ?? (defaultLayout as any)[key]
+        const value = propKey ?? (layout as any)[key]
         ;(node as any)[toYogaSetProp(key)](value)
       } catch (e) {
-        console.log(e)
+        console.log(e, key, { props })
       }
     }
 
-    const defaultPosition = positionLayout()
+    const defaultPosition = defaultPositionLayout()
     for (const key in defaultPosition) {
       const typedKey: PositionTypes = key as PositionTypes
       const position = props[typedKey]

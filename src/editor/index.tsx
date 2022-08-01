@@ -26,7 +26,11 @@ function EditorComponent() {
       esModuleInterop: true
     })
     editor.setModel(monaco.editor.createModel(defaultValue, 'typescript', monaco.Uri.parse('file:///main.tsx')))
-    monaco.editor.createModel(react + ecsTypes + YogaTypings, 'typescript', monaco.Uri.parse('file:///index.d.ts'))
+    monaco.editor.createModel(
+      react + ecsTypes + `declare global {` + YogaTypings + '}',
+      'typescript',
+      monaco.Uri.parse('file:///index.d.ts')
+    )
     setCode(editor.getValue())
   }
 

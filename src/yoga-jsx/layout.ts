@@ -8,8 +8,10 @@ export type Position = {
   bottom: number | string
   left: number | string
 }
+
 export interface YogaProps {
   display: Yoga.YogaDisplay
+  overflow: Yoga.YogaOverflow
   justifyContent: Yoga.YogaJustifyContent
   positionType: Yoga.YogaPositionType
   alignItems: Yoga.YogaAlign
@@ -34,31 +36,31 @@ export interface YogaProps {
   aspectRatio: number | undefined
 }
 
-export const PositionRecord = (pos?: Position) => ({
+export const defaultPosition = (pos?: Position) => ({
   top: pos?.top ?? 0,
   right: pos?.right ?? 0,
   bottom: pos?.bottom ?? 0,
   left: pos?.left ?? 0
 })
 
-export const positionLayout = (): Pick<YogaProps, 'position' | 'padding' | 'margin' | 'border'> => ({
-  position: PositionRecord({
+export const defaultPositionLayout = (): Pick<YogaProps, 'position' | 'padding' | 'margin' | 'border'> => ({
+  position: defaultPosition({
     left: NaN,
     top: NaN,
     right: NaN,
     bottom: NaN
   }),
-  padding: PositionRecord(),
-  margin: PositionRecord(),
-  border: PositionRecord()
+  padding: defaultPosition(),
+  margin: defaultPosition(),
+  border: defaultPosition()
 })
 
-export const LayoutRecord = (): Omit<
-  YogaProps,
-  'direction' | 'display' | 'flexBasis' | 'position' | 'padding' | 'margin' | 'border'
-> => ({
-  width: 'auto',
-  height: 'auto',
+export const defaultLayout = (): Omit<YogaProps, 'direction' | 'position' | 'padding' | 'margin' | 'border'> => ({
+  display: Yoga.DISPLAY_FLEX,
+  overflow: Yoga.OVERFLOW_VISIBLE,
+  flexBasis: NaN,
+  width: NaN,
+  height: NaN,
   minWidth: NaN,
   minHeight: NaN,
   maxWidth: NaN,
@@ -75,4 +77,4 @@ export const LayoutRecord = (): Omit<
   aspectRatio: undefined
 })
 
-export default LayoutRecord
+export default defaultLayout
